@@ -42,7 +42,9 @@ function getServerInfo () {
   return servers
 }
 
-getServerInfo()
+setInterval(() => {
+  getServerInfo()
+}, 60000) // Runs this every 60 seconds.
 
 /*
 module.exports = new Command('status2', async (message, args, context) => {
