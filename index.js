@@ -1,6 +1,10 @@
 const { Client } = require('yuuko') // Imports the Client constructor
 const path = require('path') // For joining paths
 require('dotenv').config() // Imports the variables in the `.env` file
+const getServerData = require('./utils/getServerData.js')
+const gamedigType = process.env.GAMEDIG_TYPE
+const gamedigHost = process.env.GAMEDIG_HOST
+const gamedigPort = process.env.GAMEDIG_PORT
 
 const bot = new Client({
   token: process.env.TOKEN,
@@ -8,14 +12,22 @@ const bot = new Client({
   ignoreBots: true
 })
 
-const gamedigType = process.env.GAMEDIG_TYPE
-const gamedigHost = process.env.GAMEDIG_HOST
-const gamedigPort = process.env.GAMEDIG_PORT
-
 bot.extendContext({
   variableOne: 'Variable number 1!'
 })
-bot.editStatus('online') // edits bot status
+
+getServerData(gamedigType, gamedigHost, gamedigPort).then((state) => {
+  // bot.editStatus('online')
+  if (state == null) {
+    console.log('Bot status: server offline')
+    bot.editStatus('dnd')
+  } else {
+    const map = state.map
+    const players = state.players.length
+    const maxPlayers = state.maxplayers
+    bot.editStatus('online', { name: `${players}/${maxPlayers} | ${map}`, type: 0 })
+  }
+})
 
 bot.on('error', (err) => {
   console.error(err)

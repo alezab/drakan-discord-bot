@@ -125,4 +125,8 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# Custom
 .eslintrc.json
+nodemon.json
+serverinfo.json
